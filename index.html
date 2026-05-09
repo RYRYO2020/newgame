@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0b6b3a">
+<title>クロンダイク・ソリティア</title>
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<!-- ===== タイトル画面 ===== -->
+<div id="screen-title" class="screen active">
+  <div class="title-wrap">
+    <h1 class="game-title">♠ ソリティア ♥</h1>
+    <p class="subtitle">Klondike Solitaire</p>
+
+    <div class="menu-buttons">
+      <button class="btn btn-primary" data-action="start-new">新しいゲーム</button>
+      <button class="btn" data-action="continue">つづきから</button>
+      <button class="btn" data-action="open-settings">設定</button>
+      <button class="btn" data-action="open-stats">統計</button>
+      <button class="btn" data-action="open-help">遊び方</button>
+    </div>
+
+    <div class="title-deco">
+      <span class="suit suit-spade">♠</span>
+      <span class="suit suit-heart">♥</span>
+      <span class="suit suit-club">♣</span>
+      <span class="suit suit-diamond">♦</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ゲーム画面 ===== -->
+ <>
+<div id="screen-game" class="screen">
+  <header class="game-header">
+    <button class="icon-btn" data-action="back-title" title="タイトルへ">≡</button>
+    <div class="status">
+      <div class="status-item"><span class="lbl">スコア</span><span id="stat-score">0</span></div>
+      <div class="status-item"><span class="lbl">手数</span><span id="stat-moves">0</span></div>
+      <div class="status-item"><span class="lbl">時間</span><span id="stat-time">00:00</span></div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" data-action="undo" title="元に戻す">↶</button>
+      <button class="icon-btn" data-action="hint" title="ヒント">💡</button>
+      <button class="icon-btn" data-action="auto" title="自動完成">⚡</button>
+      <button class="icon-btn" data-action="restart" title="やり直し">⟲</button>
+    </div>
+  </header>
+
+  <main class="game-board" id="game-board">
+    <!-- 上段: stock / waste / foundations -->
+    <div class="top-row">
+      <div class="pile pile-stock" id="pile-stock" data-pile="stock"></div>
+      <div class="pile pile-waste" id="pile-waste" data-pile="waste"></div>
+      <div class="spacer"></div>
+      <div class="pile pile-foundation" id="pile-found-0" data-pile="foundation" data-index="0"></div>
+      <div class="pile pile-foundation" id="pile-found-1" data-pile="foundation" data-index="1"></div>
+      <div class="pile pile-foundation" id="pile-found-2" data-pile="foundation" data-index="2"></div>
+      <div class="pile pile-foundation" id="pile-found-3" data-pile="foundation" data-index="3"></div>
+    </div>
+
+    <!-- 下段: tableau (7列) -->
+    <div class="tableau-row">
+      <div class="pile pile-tableau" id="pile-tab-0" data-pile="tableau" data-index="0"></div>
+      <div class="pile pile-tableau" id="pile-tab-1" data-pile="tableau" data-index="1"></div>
+      <div class="pile pile-tableau" id="pile-tab-2" data-pile="tableau" data-index="2"></div>
+      <div class="pile pile-tableau" id="pile-tab-3" data-pile="tableau" data-index="3"></div>
+      <div class="pile pile-tableau" id="pile-tab-4" data-pile="tableau" data-index="4"></div>
+      <div class="pile pile-tableau" id="pile-tab-5" data-pile="tableau" data-index="5"></div>
+      <div class="pile pile-tableau" id="pile-tab-6" data-pile="tableau" data-index="6"></div>
+    </div>
+  </main>
+
+  <div class="hint-banner" id="hint-banner"></div>
+</div>
+
+<!-- ===== 設定画面 ===== -->
+<div id="screen-settings" class="screen">
+  <header class="sub-header">
+    <button class="icon-btn" data-action="back-title">←</button>
+    <h2>設定</h2>
+  </header>
+  <div class="panel">
+    <label class="setting-row">
+      <span>引くカード枚数</span>
+      <select id="set-draw">
+        <option value="1">1枚ずつ</option>
+        <option value="3">3枚ずつ</option>
+      </select>
+    </label>
+    <label class="setting-row">
+      <span>カード裏面デザイン</span>
+      <select id="set-back">
+        <option value="back-blue">ブルー</option>
+        <option value="back-red">レッド</option>
+        <option value="back-grid">グリッド</option>
+        <option value="back-stars">スター</option>
+      </select>
+    </label>
+    <label class="setting-row">
+      <span>背景テーマ</span>
+      <select id="set-theme">
+        <option value="theme-green">クラシック緑</option>
+        <option value="theme-blue">オーシャン</option>
+        <option value="theme-dark">ダーク</option>
+        <option value="theme-wood">ウッド</option>
+        <option value="theme-sunset">サンセット</option>
+      </select>
+    </label>
+    <label class="setting-row">
+      <span>サウンド</span>
+      <input type="checkbox" id="set-sound" checked>
+    </label>
+    <label class="setting-row">
+      <span>アニメーション</span>
+      <input type="checkbox" id="set-anim" checked>
+    </label>
+    <label class="setting-row">
+      <span>自動フリップ</span>
+      <input type="checkbox" id="set-autoflip" checked>
+    </label>
+    <label class="setting-row">
+      <span>ヒント表示</span>
+      <input type="checkbox" id="set-hints" checked>
+    </label>
+    <label class="setting-row">
+      <span>左利きモード</span>
+      <input type="checkbox" id="set-lefty">
+    </label>
+    <label class="setting-row">
+      <span>振動フィードバック</span>
+      <input type="checkbox" id="set-vibe" checked>
+    </label>
+  </div>
+</div>
+
+<!-- ===== 統計画面 ===== -->
+<div id="screen-stats" class="screen">
+  <header class="sub-header">
+    <button class="icon-btn" data-action="back-title">←</button>
+    <h2>統計</h2>
+  </header>
+  <div class="panel">
+    <div class="stat-card"><div class="num" id="ss-played">0</div><div class="lbl">プレイ回数</div></div>
+    <div class="stat-card"><div class="num" id="ss-won">0</div><div class="lbl">勝利数</div></div>
+    <div class="stat-card"><div class="num" id="ss-rate">0%</div><div class="lbl">勝率</div></div>
+    <div class="stat-card"><div class="num" id="ss-best">--:--</div><div class="lbl">最速タイム</div></div>
+    <div class="stat-card"><div class="num" id="ss-bestscore">0</div><div class="lbl">最高スコア</div></div>
+    <div class="stat-card"><div class="num" id="ss-streak">0</div><div class="lbl">連勝記録</div></div>
+    <button class="btn btn-danger" data-action="reset-stats">統計をリセット</button>
+  </div>
+</div>
+
+<!-- ===== ヘルプ画面 ===== -->
+<div id="screen-help" class="screen">
+  <header class="sub-header">
+    <button class="icon-btn" data-action="back-title">←</button>
+    <h2>遊び方</h2>
+  </header>
+  <div class="panel help-panel">
+    <h3>目的</h3>
+    <p>4つのファウンデーション（右上）に、各スートのAから順番にKまで積み上げて全カードを移動させればクリアです。</p>
+    <h3>場札（タブロー）</h3>
+    <p>下段7列。色違いで降順（K→A）に重ねていけます。空き列にはKのみ置けます。</p>
+    <h3>山札（ストック）</h3>
+    <p>左上をタップで1枚（または3枚）めくれます。waste（その隣）の一番上のカードが操作可能です。</p>
+    <h3>操作</h3>
+    <p>ドラッグ＆ドロップ、またはタップで自動移動先を探します。ダブルタップでファウンデーションへ送れます。</p>
+  </div>
+</div>
+
+<!-- ===== クリアモーダル ===== -->
+<div id="modal-clear" class="modal">
+  <div class="modal-card">
+    <h2 class="clear-title">🎉 クリア！</h2>
+    <div class="clear-stats">
+      <div><span>スコア</span><strong id="cl-score">0</strong></div>
+      <div><span>手数</span><strong id="cl-moves">0</strong></div>
+      <div><span>時間</span><strong id="cl-time">00:00</strong></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" data-action="start-new">もう一度</button>
+      <button class="btn" data-action="back-title">タイトルへ</button>
+    </div>
+    <div class="confetti" id="confetti"></div>
+  </div>
+</div>
+
+<!-- ===== トースト ===== -->
+<div id="toast" class="toast"></div>
+
+<!-- ===== カードドラッグゴースト ===== -->
+<div id="drag-ghost" class="drag-ghost"></div>
+
+<!-- Scripts -->
+<script src="js/cards.js"></script>
+<script src="js/game.js"></script>
+<script src="js/render.js"></script>
+<script src="js/dragdrop.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
