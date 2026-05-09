@@ -1,0 +1,169 @@
+/* ===========================================
+   responsive.css - レスポンシブ & 拡張アニメ
+   =========================================== */
+
+/* ===== PC (横長, ≥900px) ===== */
+@media (min-width: 900px) {
+  :root {
+    --card-w: 100px;
+    --card-h: 140px;
+    --tab-overlap-up: 28px;
+    --tab-overlap-down: 16px;
+    --pile-gap: 14px;
+  }
+  .game-board {
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 20px;
+  }
+  .game-title { font-size: 64px; }
+  .menu-buttons { width: 320px; margin: 0 auto 30px; }
+  .panel { max-width: 700px; margin: 0 auto; width: 100%; }
+  .icon-btn { width: 42px; height: 42px; font-size: 20px; }
+  .status { gap: 28px; font-size: 14px; }
+}
+
+/* ===== タブレット (600-899px) ===== */
+@media (min-width: 600px) and (max-width: 899px) {
+  :root {
+    --card-w: 86px;
+    --card-h: 120px;
+    --tab-overlap-up: 26px;
+    --tab-overlap-down: 14px;
+  }
+}
+
+/* ===== スマホ縦 (≤599px) ===== */
+@media (max-width: 599px) {
+  :root {
+    --pile-gap: 5px;
+    --tab-overlap-up: 18px;
+    --tab-overlap-down: 10px;
+  }
+  .game-header {
+    padding: 6px 8px;
+    gap: 4px;
+  }
+  .status {
+    gap: 8px;
+    font-size: 11px;
+  }
+  .status-item span:last-child { font-size: 13px; }
+  .status-item .lbl { font-size: 9px; }
+  .icon-btn {
+    width: 32px; height: 32px;
+    font-size: 14px;
+  }
+  .game-board { padding: 5px; gap: 8px; }
+  .card-corner .rank, .card-corner .suit {
+    font-size: 11px;
+  }
+  .card-center { font-size: 22px; }
+  .game-title { font-size: 38px; letter-spacing: 2px; }
+}
+
+/* ===== スマホ縦・狭幅 (≤380px) ===== */
+@media (max-width: 380px) {
+  :root {
+    --pile-gap: 3px;
+    --tab-overlap-up: 16px;
+    --tab-overlap-down: 9px;
+  }
+  .card-corner .rank, .card-corner .suit { font-size: 9px; }
+  .card-center { font-size: 18px; }
+  .icon-btn { width: 28px; height: 28px; font-size: 12px; }
+  .status { gap: 6px; }
+  .status-item span:last-child { font-size: 12px; }
+}
+
+/* ===== スマホ横 ===== */
+@media (max-height: 500px) and (orientation: landscape) {
+  :root {
+    --pile-gap: 6px;
+    --tab-overlap-up: 16px;
+    --tab-overlap-down: 9px;
+  }
+  .game-header {
+    padding: 4px 8px;
+  }
+  .status { gap: 12px; font-size: 11px; }
+  .icon-btn { width: 30px; height: 30px; font-size: 13px; }
+  .game-board { padding: 5px; gap: 6px; }
+  .card-center { font-size: 20px; }
+}
+
+/* ===== 左利き (foundation を左に) ===== */
+body.lefty .top-row {
+  direction: rtl;
+}
+body.lefty .top-row > * { direction: ltr; }
+
+/* ===== アニメーションオフ ===== */
+body.no-anim *,
+body.no-anim *::before,
+body.no-anim *::after {
+  animation-duration: 0.001s !important;
+  transition-duration: 0.001s !important;
+}
+
+/* ===== 追加: カード移動アニメ ===== */
+.card.moving {
+  z-index: 500;
+  transition: transform .3s cubic-bezier(.2,.9,.3,1.2),
+              top .3s cubic-bezier(.2,.9,.3,1.2),
+              left .3s cubic-bezier(.2,.9,.3,1.2);
+}
+
+/* スコア+表示 */
+.score-pop {
+  position: absolute;
+  pointer-events: none;
+  font-weight: 700;
+  color: var(--accent);
+  text-shadow: 0 2px 4px rgba(0,0,0,.6);
+  animation: scorePop 1s ease-out forwards;
+  z-index: 800;
+}
+@keyframes scorePop {
+  0%   { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-40px); opacity: 0; }
+}
+
+/* 揺れアニメ (無効移動) */
+.shake { animation: shake .3s ease; }
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25%     { transform: translateX(-6px); }
+  75%     { transform: translateX(6px); }
+}
+
+/* 自動完成中のカード飛び */
+.card.auto-fly {
+  transition: transform .35s cubic-bezier(.5,0,.5,1.4),
+              top .35s, left .35s;
+}
+
+/* スターズ背面 */
+.back-stars .face-back::after {
+  content: "";
+  background:
+    radial-gradient(circle at 25% 25%, #fff 1px, transparent 2px),
+    radial-gradient(circle at 75% 35%, #fff 1px, transparent 2px),
+    radial-gradient(circle at 50% 60%, #fff 1px, transparent 2px),
+    radial-gradient(circle at 30% 80%, #fff 1px, transparent 2px),
+    radial-gradient(circle at 70% 75%, #fff 1px, transparent 2px);
+  border: 2px solid rgba(255,255,255,.3);
+}
+
+/* 強調ヒント */
+.pile.hint-target {
+  animation: hintPulse 1s ease-in-out 3;
+}
+
+/* 安全領域 (iPhone notch) */
+@supports (padding: max(0px)) {
+  .game-header { padding-top: max(8px, env(safe-area-inset-top)); }
+  .sub-header  { padding-top: max(12px, env(safe-area-inset-top)); }
+  body { padding-bottom: env(safe-area-inset-bottom); }
+}
